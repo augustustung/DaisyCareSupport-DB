@@ -253,7 +253,7 @@ async function uploadMediaFile(fileData, folderPath) {
 					if (fs.existsSync(`Media/${folderPath}`) === false) {
 						fs.mkdirSync(`Media/${folderPath}`, { recursive: true });
 					}
-					fs.appendFile(filePath, fileData[i], (err) => {
+					fs.appendFile(filePath, fileData[i].imageData, (err) => {
 						if (err) {
 							throw err;
 						}	
