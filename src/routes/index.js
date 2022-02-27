@@ -3,6 +3,7 @@ const eventController = require('../controllers/event.controller');
 const refreshToken = require('../controllers/refreshToken');
 const messageRoute = require('./message.route');
 const checkAuth = require('../controllers/auth');
+require('dotenv').config();
 
 const initServer = (app) => {
     app.get('/', (req, res) => res.send('hello'));
@@ -18,6 +19,10 @@ const initServer = (app) => {
     app.post('/get-detail-event', eventController.getDetail);
     app.post('/check-created', eventController.checkIsCreated);
     app.post('/upload', appController.uploadNewStaff);
+    app.get('/*', (req, res) => {
+        const fileUrl = __dirname.split('src')[0]
+        return res.sendFile(fileUrl + `/${req.params['0']}`)
+    });
     app.use('/api', checkAuth, messageRoute);
 }
 
