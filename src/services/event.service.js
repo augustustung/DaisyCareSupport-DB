@@ -118,12 +118,13 @@ function checkAttendance(data) {
       //find between startDate endDate  
       let event = await EventModal.findOne({
         startDate: {
-          $lt: moment().startOf('date').toDate().toISOString()
+          $lt: moment().endOf('date').toDate().toISOString()
         },
         endDate: {
-          $gte: moment().endOf('date').toISOString()
+          $gte: moment().startOf('date').toISOString()
         }
       });
+      console.log(event);
       if(event) {
         if(!findTimeCheck) {
           event.employee.push(newTimeCheckId);
