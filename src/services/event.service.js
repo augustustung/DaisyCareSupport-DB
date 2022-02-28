@@ -118,10 +118,10 @@ function checkAttendance(data) {
       //find between startDate endDate  
       let event = await EventModal.findOne({
         startDate: {
-          $lt: new Date().toISOString()
+          $lt: moment().startOf('date').toDate().toISOString()
         },
         endDate: {
-          $gte: new Date().toISOString()
+          $gte: moment().endOf('date').toISOString()
         }
       });
       if(event) {
