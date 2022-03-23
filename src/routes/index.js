@@ -19,11 +19,11 @@ const initServer = (app) => {
     app.post('/get-detail-event', eventController.getDetail);
     app.post('/check-created', eventController.checkIsCreated);
     app.post('/upload', appController.uploadNewStaff);
+    app.use('/api', checkAuth, messageRoute);
     app.get('/*', (req, res) => {
         const fileUrl = __dirname.split('src')[0]
         return res.sendFile(fileUrl + `/${req.params['0']}`)
     });
-    app.use('/api', checkAuth, messageRoute);
 }
 
 module.exports = initServer;

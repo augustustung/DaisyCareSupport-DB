@@ -124,7 +124,7 @@ function checkAttendance(data) {
           $gte: moment().startOf('date').toISOString()
         }
       });
-      console.log(event);
+
       if(event) {
         if(!findTimeCheck) {
           event.employee.push(newTimeCheckId);
