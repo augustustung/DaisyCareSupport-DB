@@ -15,7 +15,6 @@ const getAllChannelOnline = (userId) => {
                 const lastActiveOfAd = moment(ad.adminId.lastActiveAt).toDate();
                 return +lastActiveOfAd >= start && +lastActiveOfAd <= end;
             });
-            console.log(re);
             if (re.length > 0)
                 resolve({
                     errCode: 0,
@@ -125,13 +124,9 @@ const getAllMessages = (adminId) => {
             let detailInbox = await MessageModel.find({ adminId: adminId }).populate('userId').exec();
 
             if (detailInbox) {
-                const re = detailInbox.filter(ib => {
-                    ib.adminId.password = undefined;
-                    return ib.messages && ib.messages.length > 0;
-                }) || [];
                 resolve({
                     errCode: 0,
-                    data: re
+                    data: detailInbox
                 });
             } else {
                 resolve({

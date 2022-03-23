@@ -249,14 +249,14 @@ async function uploadMediaFile(fileData, folderPath) {
 			if (fileData) {
 				//fake name with 64 ASCII chars 
 				for (let i = 0; i < fileData.length; i++) {
-					let filePath = `Media/${folderPath}/${(i+1).toString()}.${fileData[i].imageFormat}`;
+					let filePath = `Media/${folderPath}/${(i + 1).toString()}.${fileData[i].imageFormat}`;
 					if (fs.existsSync(`Media/${folderPath}`) === false) {
 						fs.mkdirSync(`Media/${folderPath}`, { recursive: true });
 					}
 					fs.appendFile(filePath, fileData[i].imageData, (err) => {
 						if (err) {
 							throw err;
-						}	
+						}
 					});
 				}
 				resolve('ok');
