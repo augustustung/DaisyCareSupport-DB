@@ -6,7 +6,7 @@ const checkAuth = require('../controllers/auth');
 require('dotenv').config();
 
 const initServer = (app) => {
-    app.get('/', (req, res) => res.send('hello'));
+    app.get('/', (req, res) => res.send(`<h1 style='text-align: center; color: red; font-size: 15rem;'>STOP</h1>`));
     app.post('/sign-in', appController._onSignin);
     app.post('/refresh-token', refreshToken)
     app.post('/sign-up', appController._onSignup);
