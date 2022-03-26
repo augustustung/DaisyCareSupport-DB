@@ -5,7 +5,7 @@ const TimeModel = require('../models/time.model');
 const moment = require('moment');
 
 function createEventService(data) {
-  return new Promise(async (resolve, reject) => { 
+  return new Promise(async (resolve, reject) => {
     try {
       const newEvent = new EventModal({
         _id: new Types.ObjectId,
@@ -13,41 +13,41 @@ function createEventService(data) {
         startDate: moment(data.startDate).startOf('day').toISOString(),
         endDate: moment(data.endDate).endOf('day').toISOString()
       });
-      
+
       await newEvent.save();
 
       resolve('ok');
 
-    } catch(e) {
+    } catch (e) {
       reject(e);
     }
   })
 }
 
 function getListEvent() {
-  return new Promise(async (resolve, reject) => { 
+  return new Promise(async (resolve, reject) => {
     try {
       const listEvent = await EventModal.find();
-      if(listEvent && listEvent.length > 0) {
+      if (listEvent && listEvent.length > 0) {
         resolve(listEvent);
       } else {
         resolve([]);
       }
-    } catch(e) {
+    } catch (e) {
       reject(e);
     }
   })
 }
 
 function getEventDetail(id) {
-  return new Promise(async (resolve, reject) => { 
+  return new Promise(async (resolve, reject) => {
     try {
       let event = await EventModal.findById(id).populate('employee');
-      if(event) {
-        if(event.employee && event.employee.length > 0) {
+      if (event) {
+        if (event.employee && event.employee.length > 0) {
           let detailEmployee = [];
-          for(let e of event.employee) {
-            if(e.employeeId) {
+          for (let e of event.employee) {
+            if (e.employeeId) {
               const findEmployeeInfo = await EmployeeModel.findById(e.employeeId.toString());
               detailEmployee.push({
                 ...e._doc,
@@ -61,7 +61,7 @@ function getEventDetail(id) {
       } else {
         resolve({});
       }
-    } catch(e) {
+    } catch (e) {
       console.log(e);
       reject(e);
     }
@@ -69,7 +69,7 @@ function getEventDetail(id) {
 }
 
 function isCreatedCheck(type) {
-  return new Promise(async (resolve, reject) => { 
+  return new Promise(async (resolve, reject) => {
     try {
       let event = await EventModal.findOne({
         startDate: {
@@ -80,33 +80,33 @@ function isCreatedCheck(type) {
         },
         eventType: type
       });
-      if(event) {
+      if (event) {
         resolve(true);
       } else {
         resolve(false);
       }
-    } catch(e) {
+    } catch (e) {
       reject(e);
     }
   })
 }
 
 function checkAttendance(data) {
-  return new Promise(async (resolve, reject) => { 
+  return new Promise(async (resolve, reject) => {
     try {
-      const { 
+      const {
         employeeId,
         timeCome
-      } = data 
+      } = data
 
       //tim obj id cua employee
-      let employee = await EmployeeModel.findOne({employeeId: parseInt(employeeId)}).exec();
-      if(!employee) reject('not found');
+      let employee = await EmployeeModel.findOne({ employeeId: parseInt(employeeId) }).exec();
+      if (!employee) reject('not found');
 
       // vi la check lan dau cua ngay nen tao moi
-      const findTimeCheck = await TimeModel.findOne({employeeId: employee._id.toString()});
-      let newTimeCheckId = new Types.ObjectId; 
-      if(!findTimeCheck) {
+      const findTimeCheck = await TimeModel.findOne({ employeeId: employee._id.toString() });
+      let newTimeCheckId = new Types.ObjectId;
+      if (!findTimeCheck) {
         const newtimeCheck = new TimeModel({
           _id: newTimeCheckId,
           timeCome: timeCome,
@@ -124,27 +124,30 @@ function checkAttendance(data) {
           $gte: moment().startOf('date').toISOString()
         }
       });
-
-      if(event) {
-        if(!findTimeCheck) {
+      console.log(event);
+      if (event) {
+        if (!findTimeCheck) {
           event.employee.push(newTimeCheckId);
           await event.save();
           resolve('ok');
         } else {
-          if(event.employee && event.employee.length > 0) {
+          if (event.employee && event.employee.length > 0) {
             let findEmployee = event.employee.findIndex(e => e._id.toString() === findTimeCheck._id.toString());
-            if(findEmployee === -1) {
+            if (findEmployee === -1) {
               event.employee.push(findTimeCheck._id);
               await event.save();
               resolve('ok');
             }
+          } else {
+            event.employee.push(findTimeCheck._id);
+            await event.save();
+            resolve('ok');
           }
-          resolve('checked');
         }
       } else {
         reject("not found");
       }
-    } catch(e) {
+    } catch (e) {
       reject(e);
     }
   })
@@ -152,23 +155,23 @@ function checkAttendance(data) {
 
 
 function finishAttendance(data) {
-  return new Promise(async (resolve, reject) => { 
+  return new Promise(async (resolve, reject) => {
     try {
-      const { 
+      const {
         employeeId,
         timeLeave
-      } = data 
+      } = data
 
       //tim obj id cua employee
-      let employee = await EmployeeModel.findOne({employeeId: parseInt(employeeId)}).exec();
-      if(!employee) reject('not found');
+      let employee = await EmployeeModel.findOne({ employeeId: parseInt(employeeId) }).exec();
+      if (!employee) reject('not found');
 
       // chua diem danh => ke :)
-      let findTimeCheck = await TimeModel.findOne({employeeId: employee._id.toString()});
-      if(!findTimeCheck) {
+      let findTimeCheck = await TimeModel.findOne({ employeeId: employee._id.toString() });
+      if (!findTimeCheck) {
         reject("not found");
       } else {
-        if(findTimeCheck.timeLeave !== null && findTimeCheck.timeLeave !== undefined && findTimeCheck.timeLeave !== '') {
+        if (findTimeCheck.timeLeave !== null && findTimeCheck.timeLeave !== undefined && findTimeCheck.timeLeave !== '') {
           resolve('checked');
         } else {
           findTimeCheck.timeLeave = timeLeave;
@@ -176,7 +179,7 @@ function finishAttendance(data) {
         }
       }
       resolve("ok");
-    } catch(e) {
+    } catch (e) {
       reject(e);
     }
   })
