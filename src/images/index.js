@@ -1,0 +1,2 @@
+export const imageAdmin = "https://bizweb.dktcdn.net/100/173/931/themes/233699/assets/sp3.jpg?1610425866100"
+export const imageUser="https://www.kindpng.com/picc/m/105-1055656_account-user-profile-avatar-avatar-user-profile-icon.png"

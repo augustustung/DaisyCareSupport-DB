@@ -138,6 +138,7 @@ function checkAttendance(data) {
               await event.save();
               resolve('ok');
             }
+            resolve('checked');
           } else {
             event.employee.push(findTimeCheck._id);
             await event.save();
